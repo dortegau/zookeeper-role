@@ -10,5 +10,8 @@ RUN apt-get update \
     python-pip python-dev \
     && apt-get clean
 
+COPY initctl_faker .
+RUN chmod +x initctl_faker && rm -fr /sbin/initctl && ln -s /initctl_faker /sbin/initctl
+
 VOLUME ["/sys/fs/cgroup"]
 CMD ["/lib/systemd/systemd"]
