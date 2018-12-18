@@ -1,0 +1,22 @@
+---
+- hosts: localhost
+  connection: local
+  become: false
+  tasks:
+    - name: Startup Docker test containers
+      docker_container:
+        name: "{{ item }}"
+        state: started
+        image: "idealista/zookeeper:latest-test"
+        privileged: true
+        capabilities:
+          - SYS_ADMIN
+        volumes:
+          - '/sys/fs/cgroup:/sys/fs/cgroup:ro'
+      with_items:
+        - docker-test-zookeeper
+
+- hosts: all
+  user: root
+  roles:
+    - {name: zookeeper, role: . }
